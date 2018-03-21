@@ -7,6 +7,8 @@ SECTION = "libs"
 PR = "r0"
 
 DEPENDS = " \
+    python \
+    python-numpy \
     make \
     boost \
     openblas \
@@ -31,21 +33,22 @@ S = "${WORKDIR}/git"
 
 do_configure() {
            cp Makefile.config.example Makefile.config
-           sed -i "/^INCLUDE_DIRS :=/c\INCLUDE_DIRS := ${STAGING_INCDIR}" Makefile.config
+           sed -i "/^INCLUDE_DIRS :=/c\INCLUDE_DIRS := ${STAGING_INCDIR} ${STAGING_INCDIR}/python2.7 ${STAGING_LIBDIR}/python2.7/site-packages/numpy/core/include" Makefile.config
            sed -i "/^LIBRARY_DIRS :=/c\LIBRARY_DIRS := ${STAGING_LIBDIR}" Makefile.config
            sed -i "/Q ?= @/d" Makefile.config
-           sed -i "/^$(DISTRIBUTE_DIR): all py | $(DISTRIBUTE_SUBDIRS)/c\$(DISTRIBUTE_DIR): all | $(DISTRIBUTE_SUBDIRS)" Makefile
+
 }
 
 do_compile () {
            oe_runmake BLAS=open CPU_ONLY=1 USE_OPENCV=0 USE_LEVELDB=0 USE_LMDB=0 CUSTOM_CXX="${TARGET_PREFIX}g++ ${TOOLCHAIN_OPTIONS}" WITH_PYTHON_LAYER=0
+           oe_runmake BLAS=open CPU_ONLY=1 USE_OPENCV=0 USE_LEVELDB=0 USE_LMDB=0 CUSTOM_CXX="${TARGET_PREFIX}g++ ${TOOLCHAIN_OPTIONS}" WITH_PYTHON_LAYER=0 py
 }
 do_install () {
            oe_runmake BLAS=open CPU_ONLY=1 USE_OPENCV=0 USE_LEVELDB=0 USE_LMDB=0 CUSTOM_CXX="${TARGET_PREFIX}g++ ${TOOLCHAIN_OPTIONS}" WITH_PYTHON_LAYER=0 DISTRIBUTE_DIR=${D}/usr distribute
-           rm -rf ${D}/usr/python
 }
 FILES_${PN} += " \
     ${prefix}/proto/* \
+    ${prefix}/python/* \
 "
 
 FILES_${PN}-dev = " \
