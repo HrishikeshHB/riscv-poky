@@ -17,6 +17,8 @@ DEPENDS = " \
     glog \
     gflags \
     lmdb \
+    leveldb \
+    snappy \
 "
 
 export STAGING_INCDIR_NATIVE
@@ -41,11 +43,11 @@ do_configure() {
 }
 
 do_compile () {
-           oe_runmake BLAS=open CPU_ONLY=1 USE_OPENCV=0 USE_LEVELDB=0 CUSTOM_CXX="${TARGET_PREFIX}g++ ${TOOLCHAIN_OPTIONS}" WITH_PYTHON_LAYER=0
-           oe_runmake BLAS=open CPU_ONLY=1 USE_OPENCV=0 USE_LEVELDB=0 CUSTOM_CXX="${TARGET_PREFIX}g++ ${TOOLCHAIN_OPTIONS}" WITH_PYTHON_LAYER=0 py
+           oe_runmake BLAS=open CPU_ONLY=1 USE_OPENCV=0 CUSTOM_CXX="${TARGET_PREFIX}g++ ${TOOLCHAIN_OPTIONS}" 
+           oe_runmake BLAS=open CPU_ONLY=1 USE_OPENCV=0 CUSTOM_CXX="${TARGET_PREFIX}g++ ${TOOLCHAIN_OPTIONS}" py
 }
 do_install () {
-           oe_runmake BLAS=open CPU_ONLY=1 USE_OPENCV=0 USE_LEVELDB=0 CUSTOM_CXX="${TARGET_PREFIX}g++ ${TOOLCHAIN_OPTIONS}" WITH_PYTHON_LAYER=0 DISTRIBUTE_DIR=${D}/usr distribute
+           oe_runmake BLAS=open CPU_ONLY=1 USE_OPENCV=0 CUSTOM_CXX="${TARGET_PREFIX}g++ ${TOOLCHAIN_OPTIONS}" DISTRIBUTE_DIR=${D}/usr distribute
 }
 FILES_${PN} += " \
     ${prefix}/proto/* \
